@@ -28,17 +28,20 @@ public class TransferService {
     public ResponseEntity<?> transferMoney(int uid, TransferRequest request) {
         int senderId = uid;
         int receiverId = request.getReceiverId();
-        int amount = request.getAmount();
+        BigDecimal amount = request.getAmount();
 
         if(userRepo.existsById(senderId) && userRepo.existsById(receiverId)){
             Users sender = userRepo.findById(senderId).orElseThrow();
             Users receiver = userRepo.findById(receiverId).orElseThrow();
 
-            int senderBalance = sender.getBalance();
-            int receiverBalance = receiver.getBalance();
-            if(senderBalance - amount >= 0){
-                sender.setBalance(senderBalance - amount);
-                receiver.setBalance(receiverBalance + amount);
+            BigDecimal senderBalance = sender.getBalance();
+            BigDecimal receiverBalance = receiver.getBalance();
+            BigDecimal updatedSenderBalance = senderBalance.subtract(amount);
+            BigDecimal updatedReceiverBalance = receiverBalance.add(amount);
+
+            if(updatedSenderBalance.compareTo(BigDecimal.ZERO) >= 0){
+                sender.setBalance(updatedSenderBalance);
+                receiver.setBalance(updatedReceiverBalance);
                 userRepo.save(sender);
                 userRepo.save(receiver);
                 createTransferLog(sender, receiver, amount);
@@ -57,11 +60,11 @@ public class TransferService {
 
     }
 
-    private void createTransferLog(Users sender, Users receiver, int amount){
+    private void createTransferLog(Users sender, Users receiver, BigDecimal amount){
         Transfers transfer = Transfers.builder()
                 .senderId(sender)
                 .receiverId(receiver)
-                .amount(BigDecimal.valueOf(amount))
+                .amount(amount)
                 .transferTimestamp(LocalDateTime.now())
                 .build();
 

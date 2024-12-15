@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.awt.geom.RectangularShape;
+import java.math.BigDecimal;
 
 @Service
 public class TransactionService {
@@ -24,11 +25,11 @@ public class TransactionService {
         if(repo.existsById(userId)){
             Users user = repo.findById(userId).orElseThrow();
 
-            int balance = user.getBalance();
-            int requestDepositAmount = request.getAmount();
+            BigDecimal balance = user.getBalance();
+            BigDecimal requestDepositAmount = request.getAmount();
 
-            if(requestDepositAmount > 0){
-                int updatedBalance = balance + requestDepositAmount;
+            if(requestDepositAmount.compareTo(BigDecimal.ZERO) > 0){
+                BigDecimal updatedBalance = balance.add(requestDepositAmount);
                 user.setBalance(updatedBalance);
                 repo.save(user);
                 return new ResponseEntity<>(
@@ -47,12 +48,12 @@ public class TransactionService {
         if(repo.existsById(userId)){
             Users user = repo.findById(userId).orElseThrow();
 
-            int balance = user.getBalance();
-            int requestWithdrawAmount = request.getAmount();
+            BigDecimal balance = user.getBalance();
+            BigDecimal requestWithdrawAmount = request.getAmount();
+            BigDecimal balanceAfterWithdraw = balance.subtract(requestWithdrawAmount);
 
-            if(balance - requestWithdrawAmount >= 0){
-                int updatedBalance = balance - requestWithdrawAmount;
-                user.setBalance(updatedBalance);
+            if(balanceAfterWithdraw.compareTo(BigDecimal.ZERO) >= 0){
+                user.setBalance(balanceAfterWithdraw);
                 repo.save(user);
                 return new ResponseEntity<>(
                         String.format("[%s] Balance updated: %s", user.getUsername(), user.getBalance()),
