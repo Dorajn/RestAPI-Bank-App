@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransferRequest {
-    int senderId;
     int receiverId;
     int amount;
 }
