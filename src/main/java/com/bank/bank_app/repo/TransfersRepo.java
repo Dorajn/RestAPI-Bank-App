@@ -19,4 +19,18 @@ public interface TransfersRepo extends JpaRepository<Transfers, Integer> {
             "WHERE t.senderId.uid = :userId OR t.receiverId.uid = :userId"
     )
     List<Transfers> findTransactionsByUserId(@Param("userId") Integer id);
+
+    @Query(
+            "SELECT t " +
+                    "FROM Transfers t " +
+                    "WHERE t.senderId.uid = :userId"
+    )
+    List<Transfers> findTLoadsInTransactionsByUserId(@Param("userId") Integer id);
+
+    @Query(
+            "SELECT t " +
+                    "FROM Transfers t " +
+                    "WHERE t.receiverId.uid = :userId"
+    )
+    List<Transfers> findRecognitionInTransactionsByUserId(@Param("userId") Integer id);
 }

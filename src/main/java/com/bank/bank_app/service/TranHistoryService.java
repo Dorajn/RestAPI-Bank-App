@@ -33,4 +33,28 @@ public class TranHistoryService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    public ResponseEntity<List<Transfers>> getLoadsInTransactionsHistory(int id) {
+        if(userRepo.existsById(id)){
+            return new ResponseEntity<>(
+                    transfersRepo.findTLoadsInTransactionsByUserId(id),
+                    HttpStatus.OK
+            );
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<List<Transfers>> getRecognitionInTransactionsHistory(int id) {
+        if(userRepo.existsById(id)){
+            return new ResponseEntity<>(
+                    transfersRepo.findRecognitionInTransactionsByUserId(id),
+                    HttpStatus.OK
+            );
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

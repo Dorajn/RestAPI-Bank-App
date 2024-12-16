@@ -20,3 +20,4 @@ Aplikacja REST API do obsługi banku, umożliwiająca:
 - `POST /api/users/{uid}/account/deposit` – Wpłać środki
 - `POST /api/users/{uid}/account/transfer` – Przelew między użytkownikami
 - `GET /api/users/{uid}/account/history` – Pobierz historię przelewów
+- `GET /api/users/{uid}/account/history/raport` – Pobierz plik PDF z wykazem przelewów użytkownika

@@ -25,4 +25,14 @@ public class TranHistoryController {
     public ResponseEntity<List<Transfers>> getTransactionsHistory(@PathVariable int uid){
         return service.getTransactionsHistory(uid);
     }
+
+    @GetMapping("/users/{uid}/account/history/loads")
+    public ResponseEntity<List<Transfers>> getLoadsInTransactionsHistory(@PathVariable int uid){
+        return service.getLoadsInTransactionsHistory(uid);
+    }
+
+    @GetMapping("/users/{uid}/account/history/recognitions")
+    public ResponseEntity<List<Transfers>> getRecognitionsInTransactionsHistory(@PathVariable int uid){
+        return service.getRecognitionInTransactionsHistory(uid);
+    }
 }
